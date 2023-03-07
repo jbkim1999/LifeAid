@@ -71,7 +71,9 @@ public class Grab : MonoBehaviour
       }
       grabbedObject.GetComponent<Rigidbody>().AddForce(OVRInput.GetLocalControllerRotation(Controller) * Vector3.forward * shootMultiplier);
       grabbedObject = null;
-      Instantiate(objectToSpawn, new Vector3(0.1f, 2f, 0.5f), Quaternion.identity);
+      Instantiate(objectToSpawn, new Vector3(0.1f, 1f, 0.4f), Quaternion.identity);
+      Instantiate(objectToSpawn, new Vector3(0.1f, 1f, 0.5f), Quaternion.identity);
+      Instantiate(objectToSpawn, new Vector3(0.1f, 2f, 0.6f), Quaternion.identity);
     }
   }
 }

@@ -16,11 +16,10 @@ public class TargetScript : MonoBehaviour
             // .SetTitle("Target Hit")
             // .SetMessage("Well Done!")
             // .Show();
-            Instantiate(effect, transform.position + new Vector3(0f, 0.3f, 0f), transform.rotation);
+            Instantiate(effect, transform.position + new Vector3(0f, 1f, 0f), transform.rotation);
             targetSource.Play(0);
             gameObject.SetActive(false);
             collision.gameObject.SetActive(false);
-            effect.SetActive(true);
         }
     }
 }
