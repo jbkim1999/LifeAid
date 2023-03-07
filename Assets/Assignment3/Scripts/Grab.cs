@@ -10,6 +10,8 @@ public class Grab : MonoBehaviour
   public LayerMask grabMask;
   public GameObject objectToSpawn;
   public float shootMultiplier = 1000f;
+  public AudioSource gunAudio;
+  public AudioSource pickUpAudio;
 
   private GameObject grabbedObject;
   private bool grabbing;
@@ -52,6 +54,7 @@ public class Grab : MonoBehaviour
       grabbedObject.GetComponent<Rigidbody>().isKinematic = true;
       grabbedObject.transform.position = transform.position;
       grabbedObject.transform.parent = transform;
+      pickUpAudio.Play(0);
     }
   }
 
@@ -62,8 +65,10 @@ public class Grab : MonoBehaviour
     {
       grabbedObject.transform.parent = null;
       grabbedObject.GetComponent<Rigidbody>().isKinematic = false;
-
-      // fire object
+      if (Controller == OVRInput.Controller.RTouch)
+      {
+          gunAudio.Play(0);
+      }
       grabbedObject.GetComponent<Rigidbody>().AddForce(OVRInput.GetLocalControllerRotation(Controller) * Vector3.forward * shootMultiplier);
       grabbedObject = null;
       Instantiate(objectToSpawn, new Vector3(0.1f, 1f, 0.5f), Quaternion.identity);

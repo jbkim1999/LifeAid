@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8205208510497184318}
   - component: {fileID: 6213338985471848180}
   - component: {fileID: 7179749552359250260}
+  - component: {fileID: 7089384053114261345}
   m_Layer: 0
   m_Name: SM_Stand_02
   m_TagString: Untagged
@@ -97,3 +98,16 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.17055175, y: 0.39511502, z: 0.031955566}
   m_Center: {x: -0.0045190416, y: 0.19755906, z: 0.00831665}
+--- !u!114 &7089384053114261345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5564983022489243425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d9dfbdd8c9d44146899548b2bda5b2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetSource: {fileID: 0}
