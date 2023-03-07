@@ -111,3 +111,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetSource: {fileID: 0}
+  effect: {fileID: 6959306044815856996, guid: d003e0a988d7154488166f02e9ecf319, type: 3}

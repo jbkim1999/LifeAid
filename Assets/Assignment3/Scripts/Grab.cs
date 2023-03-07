@@ -52,7 +52,7 @@ public class Grab : MonoBehaviour
 
       grabbedObject = hits[closestHit].transform.gameObject;
       grabbedObject.GetComponent<Rigidbody>().isKinematic = true;
-      grabbedObject.transform.position = transform.position;
+      grabbedObject.transform.position = transform.position + OVRInput.GetLocalControllerRotation(Controller) * Vector3.forward * 0.3f;
       grabbedObject.transform.parent = transform;
       pickUpAudio.Play(0);
     }
@@ -71,7 +71,7 @@ public class Grab : MonoBehaviour
       }
       grabbedObject.GetComponent<Rigidbody>().AddForce(OVRInput.GetLocalControllerRotation(Controller) * Vector3.forward * shootMultiplier);
       grabbedObject = null;
-      Instantiate(objectToSpawn, new Vector3(0.1f, 1f, 0.5f), Quaternion.identity);
+      Instantiate(objectToSpawn, new Vector3(0.1f, 2f, 0.5f), Quaternion.identity);
     }
   }
 }
