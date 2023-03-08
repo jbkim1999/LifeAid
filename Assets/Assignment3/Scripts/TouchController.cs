@@ -14,7 +14,15 @@ public class TouchController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.localPosition = OVRInput.GetLocalControllerPosition(Controller);
-        transform.localRotation = OVRInput.GetLocalControllerRotation(Controller);
+        if (Controller == OVRInput.Controller.LTouch)
+        {
+            transform.localPosition = OVRInput.GetLocalControllerPosition(Controller);
+            transform.localRotation = OVRInput.GetLocalControllerRotation(Controller);
+        }
+        if (Controller == OVRInput.Controller.RTouch)
+        {
+            transform.localPosition = OVRInput.GetLocalControllerPosition(Controller);
+            transform.localRotation = OVRInput.GetLocalControllerRotation(Controller) * Quaternion.Euler(0, 90, 0);
+        }
     }
 }
