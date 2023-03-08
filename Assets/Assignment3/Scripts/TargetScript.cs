@@ -7,10 +7,6 @@ using UnityEngine.VFX;
 public class TargetScript : MonoBehaviour
 {
     public AudioSource targetSource;
-<<<<<<< Updated upstream
-    public GameObject effect;
-
-=======
     private Scoreboard scoreboard;
     public GameObject textboard;
     public GameObject effect;
@@ -19,7 +15,6 @@ public class TargetScript : MonoBehaviour
         scoreboard = FindObjectOfType<Scoreboard>();
     }
     //public GameObject hitCOUNTER;
->>>>>>> Stashed changes
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Bullet") {
@@ -31,6 +26,7 @@ public class TargetScript : MonoBehaviour
             targetSource.Play(0);
             gameObject.SetActive(false);
             collision.gameObject.SetActive(false);
+            scoreboard.hitup();
         }
     }
 }
