@@ -22,6 +22,6 @@ public class Scoreboard : MonoBehaviour
 
     public void UpdateText()
     {
-        textboard.GetComponent<TMP_Text>().text = "Score: " + score.ToString();
+        textboard.GetComponent<TMP_Text>().text = score.ToString();
     }
 }
