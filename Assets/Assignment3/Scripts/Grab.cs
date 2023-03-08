@@ -52,9 +52,19 @@ public class Grab : MonoBehaviour
 
       grabbedObject = hits[closestHit].transform.gameObject;
       grabbedObject.GetComponent<Rigidbody>().isKinematic = true;
+<<<<<<< Updated upstream
       grabbedObject.transform.position = transform.position + OVRInput.GetLocalControllerRotation(Controller) * Vector3.forward * 0.3f;
+=======
+      if (Controller == OVRInput.Controller.RTouch)
+      {
+        grabbedObject.transform.position = transform.position + OVRInput.GetLocalControllerRotation(Controller) * Vector3.forward * 0.2f;
+        pickUpAudio.Play(0);
+      } else
+      {
+        grabbedObject.transform.position = transform.position;
+      }
+>>>>>>> Stashed changes
       grabbedObject.transform.parent = transform;
-      pickUpAudio.Play(0);
     }
   }
 
@@ -68,12 +78,21 @@ public class Grab : MonoBehaviour
       if (Controller == OVRInput.Controller.RTouch)
       {
           gunAudio.Play(0);
+          grabbedObject.GetComponent<Rigidbody>().AddForce(OVRInput.GetLocalControllerRotation(Controller) * Vector3.forward * shootMultiplier);
+      } else
+      {
+        grabbedObject.GetComponent<Rigidbody>().velocity = OVRInput.GetLocalControllerVelocity(Controller);
+        grabbedObject.GetComponent<Rigidbody>().angularVelocity = OVRInput.GetLocalControllerAngularVelocity(Controller);
       }
-      grabbedObject.GetComponent<Rigidbody>().AddForce(OVRInput.GetLocalControllerRotation(Controller) * Vector3.forward * shootMultiplier);
+      Instantiate(objectToSpawn, new Vector3(-0.2f, 1f, 0.5f), Quaternion.identity);
+      Instantiate(objectToSpawn, new Vector3(-0.1f, 1f, 0.6f), Quaternion.identity);
       grabbedObject = null;
+<<<<<<< Updated upstream
       Instantiate(objectToSpawn, new Vector3(0.1f, 1f, 0.4f), Quaternion.identity);
       Instantiate(objectToSpawn, new Vector3(0.1f, 1f, 0.5f), Quaternion.identity);
       Instantiate(objectToSpawn, new Vector3(0.1f, 2f, 0.6f), Quaternion.identity);
+=======
+>>>>>>> Stashed changes
     }
   }
 }

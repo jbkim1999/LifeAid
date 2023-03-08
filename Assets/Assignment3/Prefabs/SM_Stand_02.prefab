@@ -110,6 +110,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d9dfbdd8c9d44146899548b2bda5b2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
   targetSource: {fileID: 315676352041703053, guid: f5f409f6498be524ebb2259342fbc94a,
     type: 3}
   effect: {fileID: 6959306044815856992, guid: d003e0a988d7154488166f02e9ecf319, type: 3}
+=======
+  targetSource: {fileID: 3995993966815806038, guid: f5f409f6498be524ebb2259342fbc94a,
+    type: 3}
+  textboard: {fileID: 9082315987573031020, guid: a1e37d99f28ca6f48ac9a1472030a77e,
+    type: 3}
+  effect: {fileID: 5024009746357069194, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
+--- !u!222 &3169073623892906887
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6267483086188359053}
+  m_CullTransparentMesh: 1
+>>>>>>> Stashed changes
