@@ -54,7 +54,7 @@ public class Grab : MonoBehaviour
       grabbedObject.GetComponent<Rigidbody>().isKinematic = true;
       if (Controller == OVRInput.Controller.RTouch)
       {
-        grabbedObject.transform.position = transform.position + OVRInput.GetLocalControllerRotation(Controller) * Vector3.forward * 0.2f;
+        grabbedObject.transform.position = transform.position + OVRInput.GetLocalControllerRotation(Controller) * Vector3.forward * 0.17f;
         pickUpAudio.Play(0);
       } else
       {
@@ -80,8 +80,9 @@ public class Grab : MonoBehaviour
         grabbedObject.GetComponent<Rigidbody>().velocity = OVRInput.GetLocalControllerVelocity(Controller);
         grabbedObject.GetComponent<Rigidbody>().angularVelocity = OVRInput.GetLocalControllerAngularVelocity(Controller);
       }
-      Instantiate(objectToSpawn, new Vector3(-0.2f, 1f, 0.5f), Quaternion.identity);
-      Instantiate(objectToSpawn, new Vector3(-0.1f, 1f, 0.6f), Quaternion.identity);
+      Instantiate(objectToSpawn, transform.position + OVRInput.GetLocalControllerRotation(Controller) * new Vector3(0.6f, 0f, 0.4f), Quaternion.identity);
+      Instantiate(objectToSpawn, transform.position + OVRInput.GetLocalControllerRotation(Controller) * new Vector3(0.5f, 0f, 0.5f), Quaternion.identity);
+      // Instantiate(objectToSpawn, new Vector3(-3.4f, 1f, 6.4f), Quaternion.identity);
       grabbedObject = null;
     }
   }
