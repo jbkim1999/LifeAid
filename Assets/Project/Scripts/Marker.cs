@@ -9,22 +9,11 @@ public class Marker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("test");
+        Debug.Log(gameObject.transform.position);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("test");
-        if (other.CompareTag("Player") && statesInstance.GetState() == 1)
-        {
-            statesInstance.IncrementState();
-            gameObject.SetActive(false);
-        }
     }
 }
