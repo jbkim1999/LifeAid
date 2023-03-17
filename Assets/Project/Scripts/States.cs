@@ -16,6 +16,7 @@ public class States : MonoBehaviour
     public string message = directions[1]; // message for the state
 
     public AudioSource successAudio;
+    public GameObject person;
 
     // State 1
     public GameObject marker_state1;
@@ -31,6 +32,17 @@ public class States : MonoBehaviour
     void Start()
     {
         SetPositions();
+    }
+
+    public int GetState()
+    {
+        return state;
+    }
+
+    private void SetMessage(string msg)
+    {
+        message = msg;
+        Debug.Log(message);
     }
 
     void SetPositions()
@@ -55,54 +67,13 @@ public class States : MonoBehaviour
         } else if (state == 2)
         {
             CheckSuccessful2();
-        }
-    }
-
-    public int GetState()
-    {
-        return state;
-    }
-
-    public void IncrementState()
-    {
-        state++;
-        switch (state)
+        } else if (state == 3)
         {
-            case 2:
-                marker_state1.SetActive(false);
-                marker_state2.SetActive(true);
-                SetMessage(directions[2]);
-                break;
-
-            case 3:
-                marker_state2.SetActive(false);
-                SleepAndExecute(3); // Sleep to give some time to the players to react (or say hello) and execute whatever needed
-                break;
-
-            default:
-                break;
+            CheckSuccessful3();
+        } else if (state == 4)
+        {
+            CheckSuccessful4();
         }
-        Debug.Log(state);
-    }
-
-    private void SleepAndExecute(int s)
-    {
-        StartCoroutine(SleepCoroutine(s));
-    }
-
-    private IEnumerator SleepCoroutine(int s)
-    {
-        yield return new WaitForSeconds(s);
-
-        successAudio.Play(0);
-        // NEED A FAINTING ANIMATION HERE
-        SetMessage(directions[3]);
-    }
-
-    private void SetMessage(string msg)
-    {
-        message = msg;
-        Debug.Log(message);
     }
 
     private void CheckSuccessful1()
@@ -127,5 +98,71 @@ public class States : MonoBehaviour
             successAudio.Play(0);
             IncrementState();
         }
+    }
+
+    private void CheckSuccessful3()
+    {
+
+    }
+
+    private void CheckSuccessful4()
+    {
+
+    }
+
+    public void IncrementState()
+    {
+        state++;
+        switch (state)
+        {
+            case 2:
+                marker_state1.SetActive(false);
+                marker_state2.SetActive(true);
+                SetMessage(directions[2]);
+                break;
+
+            case 3:
+                marker_state2.SetActive(false);
+                SleepAndExecute(2); // Sleep to give some time to the players to react (or say hello) and execute whatever needed
+                break;
+
+            case 4:
+                // Before moving to state 4, how about we disable the isKinematic of the model to true so that no more moving or pushing by hands is allowed?
+                // person.GetComponent<Rigidbody>().isKinematic = true;
+                // person.GetComponent<"XR Grab Interactable" as scriptname>().enabled = false; // How do I address a script name with spaces haha...
+                break;
+
+            case 5:
+                break;
+
+            default:
+                break;
+        }
+        Debug.Log(state);
+    }
+
+    private void SleepAndExecute(int s)
+    {
+        StartCoroutine(SleepCoroutine(s));
+    }
+
+    private IEnumerator SleepCoroutine(int s)
+    {
+        yield return new WaitForSeconds(s);
+
+        // NEED A FAINTING ANIMATION HERE
+        person.GetComponent<Animator>().Play("Stunned");
+        yield return new WaitForSeconds(2);
+
+        UpdateBoxCollider(0.55f, 1.4f, 0.70f);
+        SetMessage(directions[3]);
+    }
+
+    private void UpdateBoxCollider(float x, float y, float z)
+    {
+        Vector3 pos = person.transform.position;
+        BoxCollider collider = person.GetComponent<BoxCollider>();
+        collider.center = new Vector3(0, 0.27f, -1.1f);
+        collider.size = new Vector3(z, x, y);
     }
 }
