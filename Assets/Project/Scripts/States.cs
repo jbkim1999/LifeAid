@@ -135,14 +135,18 @@ public class States : MonoBehaviour
         if (Mathf.Pow(model_x - marker_state3_x, 2) + Mathf.Pow(model_z - marker_state3_z, 2) <= 2 && !person.GetComponent<XRGrabInteractable>().isSelected)
         {
             successAudio.Play(0);
+            person.transform.position = new Vector3(model_x, 0.31f, model_z-0.2f);
+            // person.GetComponent<Animator>().Play("Stroke Shaking Head");
             IncrementState();
         }
     }
 
     private void CheckSuccessful4()
     {
-        if (person.GetComponent<CollisionCounter>().GetCount() == 3)
+        if (person.GetComponent<CollisionCounter>().GetCount() == 2)
         {
+            successAudio.Play(0);
+            SleepAndExecuteState4(2);
             IncrementState();
         }
     }
@@ -186,6 +190,17 @@ public class States : MonoBehaviour
     private void SleepAndExecute(int s)
     {
         StartCoroutine(SleepCoroutine(s));
+    }
+
+    private void SleepAndExecuteState4(int s)
+    {
+        StartCoroutine(SleepCoroutineState4(s));
+    }
+
+    private IEnumerator SleepCoroutineState4(int s)
+    {
+        yield return new WaitForSeconds(s);
+        person.GetComponent<Animator>().Play("Situp To Idle");
     }
 
     private IEnumerator SleepCoroutine(int s)
