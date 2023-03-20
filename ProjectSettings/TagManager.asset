@@ -7,18 +7,20 @@ TagManager:
   - Bullet
   - RoomLight
   - SamplesInfoPanel
+  - Bottle
+  - Pack
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Grabbable
+  - 
   - Water
   - UI
   - Playground
   - Ground
-  - 
-  - 
-  - 
+  - Torso
+  - Grabbable
+  - Snapped
   - 
   - 
   - 
