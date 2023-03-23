@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Hover : MonoBehaviour
 {
-
     // Define the amount of vertical displacement
     public float displacementAmount = 5f;
     
@@ -33,7 +32,6 @@ public class Hover : MonoBehaviour
         // Update the object's position
         transform.position = newPosition;
     }
-
 }
 
  

@@ -9,6 +9,7 @@ TagManager:
   - SamplesInfoPanel
   - Bottle
   - Pack
+  - ShoePortal
   layers:
   - Default
   - TransparentFX
