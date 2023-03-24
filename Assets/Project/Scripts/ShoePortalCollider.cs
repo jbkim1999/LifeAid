@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ShoePortalCollider : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class ShoePortalCollider : MonoBehaviour
         {
             other.gameObject.SetActive(false);
 
-            // TODO: Launch Playground Scene
+            // Load Playground Scene
+            SceneManager.LoadScene(1);
         }
     }
 }
