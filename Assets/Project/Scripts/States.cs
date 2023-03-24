@@ -17,12 +17,15 @@ public class States : MonoBehaviour
         "Good job! James is awake, hand him some water to drink."
     };
     public GameObject handBoard;
-    public int state = 1;
+    public int state = 3;
     public string message = directions[1]; // message for the state
 
     public AudioSource successAudio;
     public GameObject person;
     public GameObject leftHand;
+
+    private float model_x;
+    private float model_z;
 
     // State 1
     public GameObject marker_state1;
@@ -128,14 +131,13 @@ public class States : MonoBehaviour
         float curr_x = leftHand.transform.position.x;
         float curr_z = leftHand.transform.position.z;
 
-        float model_x = person.transform.position.x;
-        float model_z = person.transform.position.z;
+        model_x = person.transform.position.x;
+        model_z = person.transform.position.z;
 
         //if (Mathf.Pow(curr_x - marker_state3_x, 2) + Mathf.Pow(curr_z - marker_state3_z, 2) <= 3)
         if (Mathf.Pow(model_x - marker_state3_x, 2) + Mathf.Pow(model_z - marker_state3_z, 2) <= 2 && !person.GetComponent<XRGrabInteractable>().isSelected)
         {
             successAudio.Play(0);
-            person.transform.position = new Vector3(model_x, 0.31f, model_z-0.2f);
             // person.GetComponent<Animator>().Play("Stroke Shaking Head");
             IncrementState();
         }
@@ -145,6 +147,10 @@ public class States : MonoBehaviour
     {
         if (person.GetComponent<CollisionCounter>().GetCount() == 2)
         {
+            foreach (GameObject obj in person.GetComponent<CollisionCounter>().GetColliders())
+            {
+                obj.SetActive(false);
+            }
             successAudio.Play(0);
             SleepAndExecuteState4(2);
             IncrementState();
@@ -200,6 +206,7 @@ public class States : MonoBehaviour
     private IEnumerator SleepCoroutineState4(int s)
     {
         yield return new WaitForSeconds(s);
+        person.transform.position = new Vector3(model_x + 0.6f, 0.31f, model_z + 1.6f);
         person.GetComponent<Animator>().Play("Situp To Idle");
     }
 
