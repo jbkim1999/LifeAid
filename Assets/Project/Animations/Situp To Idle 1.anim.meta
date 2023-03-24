@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Resources/OculusPlatformSettings.asset.meta
+guid: 29c71207196b1f547bc359af899be0d9
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+========
+guid: 8d0618ba4b307644c9c506836da5941a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+>>>>>>>> origin/project-final:Assets/Project/Animations/Situp To Idle 1.anim.meta
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
