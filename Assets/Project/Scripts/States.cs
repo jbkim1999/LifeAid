@@ -12,8 +12,8 @@ public class States : MonoBehaviour
         "",
         "Please move to the region marked by the blue indicator. You can teleport to the area by pressing the grab button, pointing to the place, and releasing the button.",
         "Please read the instructions written on the board. If done, go see your friend James on the right. He's waiting for you!",
-        "It seems that James is under heat exhaustion. If left uncared, it will develop into heat stroke. Help him to move to a cooler place, under the Gazebo.",
-        "Find 3 ice packs somewhere in the gazebo and place them on James' body to cool him down! Quick!",
+        "It seems that James is having heat exhaustion. If left uncared, it will develop into heat stroke. Help him to move to a cooler place, under the Gazebo.",
+        "Find 2 ice packs somewhere in the gazebo and place them on James' body to cool him down! Quick!",
         "Good job! James is awake, hand him some water to drink."
     };
     public GameObject handBoard;
@@ -25,6 +25,7 @@ public class States : MonoBehaviour
     public GameObject leftHand;
 
     private float model_x;
+    private float model_y;
     private float model_z;
 
     // State 1
@@ -47,9 +48,16 @@ public class States : MonoBehaviour
     public GameObject bottleZone;
     private int packCounter = 0;
 
+    // for fading in and out
+    public GameObject FaderScreen;
+    public float fadeDuration = 2;
+    public Color fadeColor;
+    private Renderer rend;
+
     // Start is called before the first frame update
     void Start()
     {
+        rend = FaderScreen.GetComponent<Renderer>();
         SetMessage(directions[1]);
         SetPositions();
     }
@@ -131,14 +139,23 @@ public class States : MonoBehaviour
         float curr_x = leftHand.transform.position.x;
         float curr_z = leftHand.transform.position.z;
 
-        model_x = person.transform.position.x;
-        model_z = person.transform.position.z;
-
         //if (Mathf.Pow(curr_x - marker_state3_x, 2) + Mathf.Pow(curr_z - marker_state3_z, 2) <= 3)
-        if (Mathf.Pow(model_x - marker_state3_x, 2) + Mathf.Pow(model_z - marker_state3_z, 2) <= 2 && !person.GetComponent<XRGrabInteractable>().isSelected)
+        if (person.GetComponent<XRGrabInteractable>().isSelected)
         {
             successAudio.Play(0);
             // person.GetComponent<Animator>().Play("Stroke Shaking Head");
+            FadeOut();
+            person.transform.position = new Vector3(9f, 0.39f, 8.54f);
+            person.transform.Rotate(0f, -60f, 0f);
+
+            model_x = person.transform.position.x;
+            model_y = person.transform.position.y;
+            model_z = person.transform.position.z;
+
+            // make person immovable and ungrabbable
+            person.GetComponent<XRGrabInteractable>().enabled = false;
+            person.GetComponent<Rigidbody>().isKinematic = true;
+            FadeIn();
             IncrementState();
         }
     }
@@ -171,14 +188,14 @@ public class States : MonoBehaviour
             case 3:
                 marker_state2.SetActive(false);
                 marker_state3.SetActive(true);
+
+                // person faints
                 SleepAndExecute(2); // Sleep to give some time to the players to react (or say hello) and execute whatever needed
+                SetMessage(directions[3]);
                 break;
 
             case 4:
                 marker_state3.SetActive(false);
-                // make person immovable and ungrabbable
-                person.GetComponent<Rigidbody>().isKinematic = true;
-                person.GetComponent<XRGrabInteractable>().enabled = false;
                 SetMessage(directions[4]);
                 break;
 
@@ -192,8 +209,7 @@ public class States : MonoBehaviour
         }
         Debug.Log(state);
     }
-
-    private void SleepAndExecute(int s)
+     private void SleepAndExecute(int s)
     {
         StartCoroutine(SleepCoroutine(s));
     }
@@ -206,7 +222,7 @@ public class States : MonoBehaviour
     private IEnumerator SleepCoroutineState4(int s)
     {
         yield return new WaitForSeconds(s);
-        person.transform.position = new Vector3(model_x + 0.6f, 0.31f, model_z + 1.6f);
+        person.transform.position = new Vector3(model_x, model_y, model_z + 1.6f);
         person.GetComponent<Animator>().Play("Situp To Idle");
     }
 
@@ -221,7 +237,6 @@ public class States : MonoBehaviour
         UpdateBoxCollider(0.55f, 1.4f, 0.70f);
         // EnableColliders();
 
-        SetMessage(directions[3]);
     }
 
     private void UpdateBoxCollider(float x, float y, float z)
@@ -246,5 +261,45 @@ public class States : MonoBehaviour
     {
         // person.GetComponent<BoxCollider>().enabled = true;
         torso.GetComponent<MeshCollider>().enabled = true;
+    }
+
+    /* helpers and routines for fading the screen to black (and back) */
+    public void FadeIn()
+    {
+        Fade(1, 0);
+    }
+
+    public void FadeOut()
+    {
+        Fade(0, 1);
+    }
+
+    public void Fade(float alphaIn, float alphaOut)
+    {
+        StartCoroutine(FadeCoroutine(alphaIn, alphaOut));
+    }
+
+    public IEnumerator FadeCoroutine(float alphaIn, float alphaOut)
+    {
+        yield return StartCoroutine(FadeRoutine(alphaIn, alphaOut));
+    }
+
+    public IEnumerator FadeRoutine(float alphaIn, float alphaOut)
+    {
+        float timer = 0;
+        while (timer <= fadeDuration)
+        {
+            Color newColor = fadeColor;
+            newColor.a = Mathf.Lerp(alphaIn, alphaOut, timer / fadeDuration);
+            rend.material.SetColor("_Color", newColor);
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        Color newColor2 = fadeColor;
+        newColor2.a = alphaOut;
+        rend.material.SetColor("_Color", newColor2);
+        yield return new WaitForSeconds(2);
     }
 }
