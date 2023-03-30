@@ -10,20 +10,21 @@ public class States : MonoBehaviour
     // 1-indexed
     static string[] directions = {
         "",
-        "Please move to the region marked by the blue indicator. You can teleport to the area by pressing the grab button, pointing to the place, and releasing the button.",
-        "Please read the instructions written on the board. If done, go see your friend James on the right. He's waiting for you!",
-        "It seems that James is having heat exhaustion. If left uncared, it will develop into heat stroke. Help him to move to a cooler place, under the Gazebo.",
-        "Find 2 ice packs somewhere in the gazebo and place them on James' body to cool him down! Quick!",
-        "Good job! James is awake, hand him some water to drink."
+        "Move to the region marked by the blue indicator. Grab James by pressing the side trigger on your controllers, and move him under the Gazebo. You can close this instruction by pressing the X button, or the lower button on your left controller.",
+        "Find two ice packs somewhere in the gazebo and place them on James' body to cool him down.",
+        "James is now awake, hand him some water to drink by placing the water bottle into the snap zone.",
+        "Go to the signboard and learn more about heat exhaustion.",
+        "Congratulations, you have completed the tutorial on heat exhaustion!"
     };
     public GameObject handBoard;
-    public int state = 3;
+    public int state = 1;
     public string message = directions[1]; // message for the state
 
     public AudioSource successAudio;
     public GameObject person;
     public GameObject leftHand;
 
+    public GameObject torso;
     private float model_x;
     private float model_y;
     private float model_z;
@@ -34,23 +35,19 @@ public class States : MonoBehaviour
     private float marker_state1_z;
 
     // State 2
-    public GameObject marker_state2;
-    private float marker_state2_x;
-    private float marker_state2_z;
+    private int packCounter = 0;
 
     // State 3
-    public GameObject marker_state3;
-    private float marker_state3_x;
-    private float marker_state3_z;
-    public GameObject torso;
+    public GameObject bottleZone;
 
     // State 4
-    public GameObject bottleZone;
-    private int packCounter = 0;
+    public GameObject marker_state4;
+    private float marker_state4_x;
+    private float marker_state4_z;
 
     // for fading in and out
     public GameObject FaderScreen;
-    public float fadeDuration = 2;
+    public float fadeDuration = 5;
     public Color fadeColor;
     private Renderer rend;
 
@@ -60,6 +57,7 @@ public class States : MonoBehaviour
         rend = FaderScreen.GetComponent<Renderer>();
         SetMessage(directions[1]);
         SetPositions();
+        SleepAndExecute(3);
     }
 
     public int GetState()
@@ -80,15 +78,10 @@ public class States : MonoBehaviour
         marker_state1_x = marker_state1.transform.position.x;
         marker_state1_z = marker_state1.transform.position.z;
 
-        // State 2
-        marker_state2_x = marker_state2.transform.position.x;
-        marker_state2_z = marker_state2.transform.position.z;
-        marker_state2.SetActive(false);
-
-        // State 3
-        marker_state3_x = marker_state3.transform.position.x;
-        marker_state3_z = marker_state3.transform.position.z;
-        marker_state3.SetActive(false);
+        // State 4
+        marker_state4_x = marker_state4.transform.position.x;
+        marker_state4_z = marker_state4.transform.position.z;
+        marker_state4.SetActive(false);
     }
 
     // Update is called once per frame
@@ -101,9 +94,11 @@ public class States : MonoBehaviour
         } else if (state == 2)
         {
             CheckSuccessful2();
+
         } else if (state == 3)
         {
             CheckSuccessful3();
+
         } else if (state == 4)
         {
             CheckSuccessful4();
@@ -117,36 +112,14 @@ public class States : MonoBehaviour
 
         if (Mathf.Pow(curr_x - marker_state1_x, 2) + Mathf.Pow(curr_z - marker_state1_z, 2) <= 3)
         {
-            successAudio.Play(0);
-            IncrementState();
+            marker_state1.SetActive(false);
         }
-    }
-
-    private void CheckSuccessful2()
-    {
-        float curr_x = leftHand.transform.position.x;
-        float curr_z = leftHand.transform.position.z;
-
-        if (Mathf.Pow(curr_x - marker_state2_x, 2) + Mathf.Pow(curr_z - marker_state2_z, 2) <= 3)
-        {
-            successAudio.Play(0);
-            IncrementState();
-        }
-    }
-
-    private void CheckSuccessful3()
-    {
-        float curr_x = leftHand.transform.position.x;
-        float curr_z = leftHand.transform.position.z;
-
-        //if (Mathf.Pow(curr_x - marker_state3_x, 2) + Mathf.Pow(curr_z - marker_state3_z, 2) <= 3)
         if (person.GetComponent<XRGrabInteractable>().isSelected)
         {
             successAudio.Play(0);
-            // person.GetComponent<Animator>().Play("Stroke Shaking Head");
             FadeOut();
-            person.transform.position = new Vector3(9f, 0.39f, 8.54f);
-            person.transform.Rotate(0f, -60f, 0f);
+            person.transform.position = new Vector3(9f, 0.39f, 7.34f);
+            person.transform.Rotate(0f, -20f, 0f);
 
             model_x = person.transform.position.x;
             model_y = person.transform.position.y;
@@ -154,13 +127,12 @@ public class States : MonoBehaviour
 
             // make person immovable and ungrabbable
             person.GetComponent<XRGrabInteractable>().enabled = false;
-            person.GetComponent<Rigidbody>().isKinematic = true;
             FadeIn();
             IncrementState();
         }
     }
 
-    private void CheckSuccessful4()
+    private void CheckSuccessful2()
     {
         if (person.GetComponent<CollisionCounter>().GetCount() == 2)
         {
@@ -169,7 +141,25 @@ public class States : MonoBehaviour
                 obj.SetActive(false);
             }
             successAudio.Play(0);
-            SleepAndExecuteState4(2);
+            SleepAndExecuteState2(3);
+            IncrementState();
+        }
+    }
+
+    private void CheckSuccessful3()
+    {
+
+    }
+
+    private void CheckSuccessful4()
+    {
+        float curr_x = leftHand.transform.position.x;
+        float curr_z = leftHand.transform.position.z;
+
+        if (Mathf.Pow(curr_x - marker_state4_x, 2) + Mathf.Pow(curr_z - marker_state4_z, 2) <= 3)
+        {
+            marker_state4.SetActive(false);
+            successAudio.Play(0);
             IncrementState();
         }
     }
@@ -180,28 +170,20 @@ public class States : MonoBehaviour
         switch (state)
         {
             case 2:
-                marker_state1.SetActive(false);
-                marker_state2.SetActive(true);
+                marker_state1.SetActive(false); // double check
                 SetMessage(directions[2]);
                 break;
 
             case 3:
-                marker_state2.SetActive(false);
-                marker_state3.SetActive(true);
-
-                // person faints
-                SleepAndExecute(2); // Sleep to give some time to the players to react (or say hello) and execute whatever needed
                 SetMessage(directions[3]);
                 break;
 
             case 4:
-                marker_state3.SetActive(false);
                 SetMessage(directions[4]);
                 break;
 
             case 5:
                 SetMessage(directions[5]);
-                bottleZone.SetActive(true);
                 break;
 
             default:
@@ -209,21 +191,10 @@ public class States : MonoBehaviour
         }
         Debug.Log(state);
     }
-     private void SleepAndExecute(int s)
+    
+    private void SleepAndExecute(int s)
     {
         StartCoroutine(SleepCoroutine(s));
-    }
-
-    private void SleepAndExecuteState4(int s)
-    {
-        StartCoroutine(SleepCoroutineState4(s));
-    }
-
-    private IEnumerator SleepCoroutineState4(int s)
-    {
-        yield return new WaitForSeconds(s);
-        person.transform.position = new Vector3(model_x, model_y, model_z + 1.6f);
-        person.GetComponent<Animator>().Play("Situp To Idle");
     }
 
     private IEnumerator SleepCoroutine(int s)
@@ -234,7 +205,7 @@ public class States : MonoBehaviour
         person.GetComponent<Animator>().Play("Stunned");
         yield return new WaitForSeconds(2);
 
-        UpdateBoxCollider(0.55f, 1.4f, 0.70f);
+        UpdateBoxCollider(0.375f, 1.4f, 0.70f);
         // EnableColliders();
 
     }
@@ -244,23 +215,21 @@ public class States : MonoBehaviour
         Vector3 pos = person.transform.position;
 
         BoxCollider collider = person.GetComponent<BoxCollider>();
-        collider.center = new Vector3(0, 0.27f, -1.1f);
+        collider.center = new Vector3(0, 0.21f, -1.1f);
         collider.size = new Vector3(z, x, y);
-
-        BoxCollider colliderTorso = torso.GetComponent<BoxCollider>();
-        colliderTorso.center = new Vector3(0, 0.27f, -1.1f);
     }
 
-    private void DisableColliders()
+    private void SleepAndExecuteState2(int s)
     {
-        // person.GetComponent<BoxCollider>().enabled = false;
-        torso.GetComponent<MeshCollider>().enabled = false;
+        StartCoroutine(SleepCoroutineState2(s));
     }
 
-    private void EnableColliders()
+    private IEnumerator SleepCoroutineState2(int s)
     {
-        // person.GetComponent<BoxCollider>().enabled = true;
-        torso.GetComponent<MeshCollider>().enabled = true;
+        yield return new WaitForSeconds(s);
+        person.transform.position = new Vector3(model_x, model_y, model_z + 0.85f);
+        person.GetComponent<Animator>().Play("Situp To Idle");
+        bottleZone.SetActive(true);
     }
 
     /* helpers and routines for fading the screen to black (and back) */
@@ -301,5 +270,18 @@ public class States : MonoBehaviour
         newColor2.a = alphaOut;
         rend.material.SetColor("_Color", newColor2);
         yield return new WaitForSeconds(2);
+    }
+
+    /* Unused methods */
+    private void DisableColliders()
+    {
+        // person.GetComponent<BoxCollider>().enabled = false;
+        torso.GetComponent<MeshCollider>().enabled = false;
+    }
+
+    private void EnableColliders()
+    {
+        // person.GetComponent<BoxCollider>().enabled = true;
+        torso.GetComponent<MeshCollider>().enabled = true;
     }
 }

@@ -9,6 +9,7 @@ TagManager:
   - SamplesInfoPanel
   - Bottle
   - Pack
+  - ShoePortal
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - Torso
   - Grabbable
   - Snapped
-  - 
+  - Player
   - 
   - 
   - 
