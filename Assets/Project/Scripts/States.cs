@@ -39,6 +39,7 @@ public class States : MonoBehaviour
 
     // State 3
     public GameObject marker_state3;
+    public GameObject progressBar;
     private float marker_state3_x;
     private float marker_state3_z;
     public GameObject torso;
@@ -139,6 +140,7 @@ public class States : MonoBehaviour
         {
             successAudio.Play(0);
             // person.GetComponent<Animator>().Play("Stroke Shaking Head");
+            progressBar.SetActive(true);
             IncrementState();
         }
     }
@@ -153,6 +155,7 @@ public class States : MonoBehaviour
             }
             successAudio.Play(0);
             SleepAndExecuteState4(2);
+            progressBar.SetActive(false);
             IncrementState();
         }
     }
