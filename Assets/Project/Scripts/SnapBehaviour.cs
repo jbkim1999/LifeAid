@@ -6,6 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class SnapBehaviour : MonoBehaviour
 {
     private Color originalColor;
+    public bool filled = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +31,7 @@ public class SnapBehaviour : MonoBehaviour
                 other.gameObject.transform.rotation = transform.rotation;
                 other.gameObject.GetComponent<Rigidbody>().isKinematic = true;
                 other.gameObject.GetComponent<XRGrabInteractable>().enabled = false;
+                filled = true;
                 gameObject.SetActive(false);
             }
         }
@@ -41,5 +43,10 @@ public class SnapBehaviour : MonoBehaviour
         {
             GetComponent<Renderer>().material.color = originalColor;
         }
+    }
+
+    public bool IsFilled()
+    {
+        return filled;
     }
 }

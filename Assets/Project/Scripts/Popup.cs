@@ -10,11 +10,15 @@ public class Popup : MonoBehaviour
   public string instructionButton_exit;
   private bool showInstructions;
   public GameObject instructions;
+  public GameObject CanvasParent;
+  private Animator CoAnimator;
 
   // Start is called before the first frame update
   void Start()
   {
-        instructions.SetActive(false);
+        instructions.SetActive(true);
+        CoAnimator = CanvasParent.GetComponent<Animator>();
+
   }
 
   // Update is called once per frame
@@ -23,13 +27,16 @@ public class Popup : MonoBehaviour
     if (Input.GetAxis(instructionButton_enter) == 1 && showInstructions == false)
         {
             showInstructions = true;
-            instructions.SetActive(showInstructions);
+            // instructions.SetActive(showInstructions);
             Debug.Log("canvas_is_True");
+            CoAnimator.SetTrigger("Open");
+
         }
      else if(Input.GetAxis(instructionButton_exit) == 1 && showInstructions == true)
        {
            showInstructions = false;
-           instructions.SetActive(showInstructions);
+        //    instructions.SetActive(showInstructions);
+           CoAnimator.SetTrigger("Closed");
            Debug.Log("canvas_is_False");
         }
   }

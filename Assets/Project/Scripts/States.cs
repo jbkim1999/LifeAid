@@ -47,7 +47,7 @@ public class States : MonoBehaviour
 
     // for fading in and out
     public GameObject FaderScreen;
-    public float fadeDuration = 5;
+    public int fadeDuration;
     public Color fadeColor;
     private Renderer rend;
 
@@ -117,17 +117,11 @@ public class States : MonoBehaviour
         if (person.GetComponent<XRGrabInteractable>().isSelected)
         {
             successAudio.Play(0);
-            FadeOut();
-            person.transform.position = new Vector3(9f, 0.39f, 7.34f);
-            person.transform.Rotate(0f, -20f, 0f);
-
-            model_x = person.transform.position.x;
-            model_y = person.transform.position.y;
-            model_z = person.transform.position.z;
+            StartCoroutine(FadeOut());
+            Debug.Log("fading out");
 
             // make person immovable and ungrabbable
             person.GetComponent<XRGrabInteractable>().enabled = false;
-            FadeIn();
             IncrementState();
         }
     }
@@ -148,6 +142,11 @@ public class States : MonoBehaviour
 
     private void CheckSuccessful3()
     {
+        if (bottleZone.GetComponent<SnapBehaviour>().IsFilled())
+        {
+            successAudio.Play(0);
+            IncrementState();
+        }
 
     }
 
@@ -170,7 +169,7 @@ public class States : MonoBehaviour
         switch (state)
         {
             case 2:
-                marker_state1.SetActive(false); // double check
+                
                 SetMessage(directions[2]);
                 break;
 
@@ -179,6 +178,7 @@ public class States : MonoBehaviour
                 break;
 
             case 4:
+                marker_state4.SetActive(true);
                 SetMessage(directions[4]);
                 break;
 
@@ -233,31 +233,39 @@ public class States : MonoBehaviour
     }
 
     /* helpers and routines for fading the screen to black (and back) */
-    public void FadeIn()
+
+    public IEnumerator FadeIn()
     {
-        Fade(1, 0);
+        yield return StartCoroutine(FadeRoutine(1, 0));
     }
 
-    public void FadeOut()
+    public IEnumerator FadeOut()
     {
-        Fade(0, 1);
+        yield return StartCoroutine(FadeRoutine(0, 1));
+
+        yield return new WaitForSeconds(1);
+        marker_state1.SetActive(false); // double check
+
+        person.transform.position = new Vector3(9f, 0.39f, 7.34f);
+        person.transform.Rotate(0f, -20f, 0f);
+
+        model_x = person.transform.position.x;
+        model_y = person.transform.position.y;
+        model_z = person.transform.position.z;
+
+
+        yield return StartCoroutine(FadeIn());
+        Debug.Log("fading in");
+
     }
 
-    public void Fade(float alphaIn, float alphaOut)
-    {
-        StartCoroutine(FadeCoroutine(alphaIn, alphaOut));
-    }
-
-    public IEnumerator FadeCoroutine(float alphaIn, float alphaOut)
-    {
-        yield return StartCoroutine(FadeRoutine(alphaIn, alphaOut));
-    }
 
     public IEnumerator FadeRoutine(float alphaIn, float alphaOut)
     {
         float timer = 0;
         while (timer <= fadeDuration)
         {
+
             Color newColor = fadeColor;
             newColor.a = Mathf.Lerp(alphaIn, alphaOut, timer / fadeDuration);
             rend.material.SetColor("_Color", newColor);
@@ -269,7 +277,6 @@ public class States : MonoBehaviour
         Color newColor2 = fadeColor;
         newColor2.a = alphaOut;
         rend.material.SetColor("_Color", newColor2);
-        yield return new WaitForSeconds(2);
     }
 
     /* Unused methods */
