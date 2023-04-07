@@ -51,6 +51,9 @@ public class States : MonoBehaviour
     public Color fadeColor;
     private Renderer rend;
 
+    // Progress bar
+    public GameObject progressBar;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -120,6 +123,7 @@ public class States : MonoBehaviour
             StartCoroutine(FadeOut());
             Debug.Log("fading out");
 
+            progressBar.SetActive(true);
             // make person immovable and ungrabbable
             person.GetComponent<XRGrabInteractable>().enabled = false;
             IncrementState();
@@ -229,6 +233,7 @@ public class States : MonoBehaviour
         yield return new WaitForSeconds(s);
         person.transform.position = new Vector3(model_x, model_y, model_z + 0.85f);
         person.GetComponent<Animator>().Play("Situp To Idle");
+        progressBar.SetActive(false);
         bottleZone.SetActive(true);
     }
 
