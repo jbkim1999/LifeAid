@@ -12,7 +12,7 @@ public class States : MonoBehaviour
         "",
         "Move to the region marked by the blue indicator.\nGrab James by pressing the side trigger on your controllers, and move him under the Gazebo.\n\n\n\n\nYou can close this instruction by pressing the X button, or the lower button on your left controller",
         "Find two ice packs somewhere in the gazebo and place them on James' body to cool him down.",
-        "James is now awake, hand him some water to drink by placing the water bottle into the snap zone.",
+        "James is now awake, place a water bottle next to him for him to drink (in the area indicated by the blue marker on the ground).",
         "Go to the signboard and learn more about heat exhaustion.",
         "Congratulations, you have completed the tutorial on heat exhaustion!"
     };
@@ -40,6 +40,7 @@ public class States : MonoBehaviour
     private float marker_state1_z;
 
     // State 3
+    public GameObject bottleMarker;
     public GameObject bottleZone;
 
     // State 4
@@ -244,6 +245,7 @@ public class States : MonoBehaviour
         person.GetComponent<Animator>().Play("Situp To Idle");
         progressBar.SetActive(false);
         bottleZone.SetActive(true);
+        bottleMarker.SetActive(true);
     }
 
     private IEnumerator SleepAndPlayAudio(int s, AudioSource a)
