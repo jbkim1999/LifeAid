@@ -10,7 +10,7 @@ public class States : MonoBehaviour
     // 1-indexed
     static string[] directions = {
         "",
-        "Move to the region marked by the blue indicator. Grab James by pressing the side trigger on your controllers, and move him under the Gazebo. You can close this instruction by pressing the X button, or the lower button on your left controller.",
+        "Move to the region marked by the blue indicator.\nGrab James by pressing the side trigger on your controllers, and move him under the Gazebo.\n\n\n\n\nYou can close this instruction by pressing the X button, or the lower button on your left controller",
         "Find two ice packs somewhere in the gazebo and place them on James' body to cool him down.",
         "James is now awake, hand him some water to drink by placing the water bottle into the snap zone.",
         "Go to the signboard and learn more about heat exhaustion.",
@@ -20,6 +20,11 @@ public class States : MonoBehaviour
     public int state = 1;
     public string message = directions[1]; // message for the state
 
+    public AudioSource introAudio1;
+    public AudioSource faintAudio;
+    public AudioSource introAudio2;
+    public AudioSource goodjobAudio;
+    public AudioSource congratsAudio;
     public AudioSource successAudio;
     public GameObject person;
     public GameObject leftHand;
@@ -33,9 +38,6 @@ public class States : MonoBehaviour
     public GameObject marker_state1;
     private float marker_state1_x;
     private float marker_state1_z;
-
-    // State 2
-    private int packCounter = 0;
 
     // State 3
     public GameObject bottleZone;
@@ -58,9 +60,11 @@ public class States : MonoBehaviour
     void Start()
     {
         rend = FaderScreen.GetComponent<Renderer>();
+        StartCoroutine(EnterScene());
         SetMessage(directions[1]);
         SetPositions();
-        SleepAndExecute(3);
+        introAudio1.Play(0);
+        SleepAndExecute(5.5f); // Complete the rest of Start
     }
 
     public int GetState()
@@ -120,6 +124,7 @@ public class States : MonoBehaviour
         if (person.GetComponent<XRGrabInteractable>().isSelected)
         {
             successAudio.Play(0);
+            StartCoroutine(SleepAndPlayAudio(1, goodjobAudio));
             StartCoroutine(FadeOut());
             Debug.Log("fading out");
 
@@ -139,6 +144,7 @@ public class States : MonoBehaviour
                 obj.SetActive(false);
             }
             successAudio.Play(0);
+            StartCoroutine(SleepAndPlayAudio(1, goodjobAudio));
             SleepAndExecuteState2(3);
             IncrementState();
         }
@@ -149,6 +155,7 @@ public class States : MonoBehaviour
         if (bottleZone.GetComponent<SnapBehaviour>().IsFilled())
         {
             successAudio.Play(0);
+            StartCoroutine(SleepAndPlayAudio(1, goodjobAudio));
             IncrementState();
         }
 
@@ -163,6 +170,7 @@ public class States : MonoBehaviour
         {
             marker_state4.SetActive(false);
             successAudio.Play(0);
+            StartCoroutine(SleepAndPlayAudio(1, congratsAudio));
             IncrementState();
         }
     }
@@ -196,22 +204,23 @@ public class States : MonoBehaviour
         Debug.Log(state);
     }
     
-    private void SleepAndExecute(int s)
+    private void SleepAndExecute(float s)
     {
         StartCoroutine(SleepCoroutine(s));
     }
 
-    private IEnumerator SleepCoroutine(int s)
+    private IEnumerator SleepCoroutine(float s)
     {
         yield return new WaitForSeconds(s);
 
         // DisableColliders();
+        faintAudio.Play(0);
         person.GetComponent<Animator>().Play("Stunned");
+        introAudio2.Play(0);
         yield return new WaitForSeconds(2);
 
         UpdateBoxCollider(0.375f, 1.4f, 0.70f);
         // EnableColliders();
-
     }
 
     private void UpdateBoxCollider(float x, float y, float z)
@@ -235,6 +244,12 @@ public class States : MonoBehaviour
         person.GetComponent<Animator>().Play("Situp To Idle");
         progressBar.SetActive(false);
         bottleZone.SetActive(true);
+    }
+
+    private IEnumerator SleepAndPlayAudio(int s, AudioSource a)
+    {
+        yield return new WaitForSeconds(s);
+        a.Play(0);
     }
 
     /* helpers and routines for fading the screen to black (and back) */
@@ -264,6 +279,11 @@ public class States : MonoBehaviour
 
     }
 
+    public IEnumerator EnterScene()
+    {
+        yield return FadeRoutine(1, 0);
+        yield return new WaitForSeconds(1);
+    }
 
     public IEnumerator FadeRoutine(float alphaIn, float alphaOut)
     {
