@@ -1,8 +1,10 @@
 ![image](https://user-images.githubusercontent.com/60286063/232323885-740a7187-2763-4d64-902d-10cc330d393b.png)
 # LifeAid
 
-LifeAid is a VR application that trains students how to react under certain emergency situations in our everyday life. <br/>
+LifeAid is a VR application that trains students how to react under certain emergency situations in our everyday life.
 Through immersive VR simulations, they will try out what actions to take as if these emergency situations occurred in real-life.
+
+Check out our promotional video [here!](https://www.youtube.com/watch?v=Phb3OcShrBo)
 
 This project was built for **Oculus Rift S**. Unity version **2021.3.17f1**.
 
